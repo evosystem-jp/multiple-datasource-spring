@@ -1,9 +1,9 @@
-package com.evosys.db1.repository;
+package com.example.db1.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.evosys.db1.entity.User;
+import com.example.db1.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
