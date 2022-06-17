@@ -1,4 +1,4 @@
-package com.evosys.db1.config;
+package com.example.db2.config;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -10,7 +10,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,37 +18,34 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "db1Factory", transactionManagerRef = "db1Manager", basePackages = {
-        "${datasource1.repository.packageName}" })
-public class UserConfig {
-    
-    @Value("${datasource1.entity.packageName}")
+@EnableJpaRepositories(entityManagerFactoryRef = "db2Factory", transactionManagerRef = "db2Manager", basePackages = {
+        "${datasource2.repository.packageName}" })
+
+public class TaskConfig {
+
+    @Value("${datasource2.entity.packageName}")
     private String entityPackageName;
-    
-    @Primary
-    @Bean(name = "db1")
-    @ConfigurationProperties(prefix = "spring.datasource")
+
+    @Bean(name = "productDataSource")
+    @ConfigurationProperties(prefix = "db2.datasource")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
-    
-    @Primary
-    @Bean(name = "db1Factory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+
+    @Bean(name = "db2Factory")
+    public LocalContainerEntityManagerFactoryBean barEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("db1") DataSource dataSource) {
-        
+            @Qualifier("productDataSource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
                 .packages(entityPackageName)
-                .persistenceUnit("db1")
+                .persistenceUnit("db2")
                 .build();
     }
-    
-    @Primary
-    @Bean(name = "db1Manager")
-    public PlatformTransactionManager transactionManager(
-            @Qualifier("db1Factory") EntityManagerFactory factory) {
-        return new JpaTransactionManager(factory);
+
+    @Bean(name = "db2Manager")
+    public PlatformTransactionManager productTransactionManager(
+            @Qualifier("db2Factory") EntityManagerFactory productEntityManagerFactory) {
+        return new JpaTransactionManager(productEntityManagerFactory);
     }
 }
