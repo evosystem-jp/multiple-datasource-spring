@@ -22,23 +22,23 @@ sourceSets {
     main {
         java {
             srcDir 'src/main/java'
-       }
-   }
+        }
+    }
 }
 
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-  implementation 'org.springframework.boot:spring-boot-starter-web'
-  runtimeOnly 'mysql:mysql-connector-java'
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-  runtime ('org.springframework.boot:spring-boot-devtools')
-  compileOnly 'org.projectlombok:lombok:1.18.8'
+    compileOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
 
-  compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
 }
