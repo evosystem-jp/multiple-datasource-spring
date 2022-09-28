@@ -1,13 +1,12 @@
 package com.example.db1.config;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
+import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,10 +16,14 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.HashMap;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "db1Factory", transactionManagerRef = "db1Manager", basePackages = {
-        "${datasource1.repository.packageName}" })
+        "${datasource1.repository.packageName}"})
 public class UserConfig {
 
     @Value("${datasource1.entity.packageName}")
@@ -43,6 +46,12 @@ public class UserConfig {
                 .dataSource(dataSource)
                 .packages(entityPackageName)
                 .persistenceUnit("db1")
+                .properties(new HashMap<String, String>() {
+                    {
+                        put("hibernate.physical_naming_strategy", SpringPhysicalNamingStrategy.class.getName());
+                        put("hibernate.implicit_naming_strategy", SpringImplicitNamingStrategy.class.getName());
+                    }
+                })
                 .build();
     }
 
